@@ -6,12 +6,16 @@
         <td>Jelenlegi státusz</td>
         <td>Módosítás</td>
     </tr>
-    <tr *ngFor="let fuel of fuelTypes">
+    <tr *ngFor="let fuel of fuelTypes; let i = index">
         <td>{{fuel}}</td>
         <td>Van</td>
         <td>
-            <button style="background: rgb(235, 95, 95)" (click)="outOfFuel(fuel)">Nincs</button>
-            <button style="background: rgb(138, 247, 138)" (click)="thereIsFuel(fuel)">Van</button>
+            <button style="background: rgb(235, 95, 95)" 
+                    (click)="outOfFuel(fuel, i)"
+                    [disabled]="clicked[i]">Nincs</button>
+            <button style="background: rgb(138, 247, 138)" 
+                    (click)="thereIsFuel(fuel, i)"
+                    [disabled]="clicked[i]">Van</button>
         </td>
     </tr>
     

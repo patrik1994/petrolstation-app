@@ -13,6 +13,7 @@ export class ModifyStationComponent implements OnInit {
   fuelTypes = ["95-ös benzin", "Diesel", "98-as benzin", "100-as benzin", "95-ös prémium benzin", "Prémium diesel"];
 
   stations = STATIONS;
+  clicked: boolean[] = [false];
   
   constructor( private route: ActivatedRoute) { }
 
@@ -26,12 +27,14 @@ export class ModifyStationComponent implements OnInit {
 
   }
 
-  outOfFuel(_input: any) {
-    console.log("outOfFuel:" + _input);
+  outOfFuel(_input: any, _rowIndex: any) {
+    console.log("outOfFuel: " + _input + " rowindex: " + _rowIndex) ;
+    this.clicked[_rowIndex] = true;
   }
 
-  thereIsFuel(_input: any) {
-    console.log("thereIsFuel:" + _input);
+  thereIsFuel(_input: any, _rowIndex: any) {
+    console.log("thereIsFuel: " + _input + " rowindex: " + _rowIndex);
+    this.clicked[_rowIndex] = true;
   }
 
 
