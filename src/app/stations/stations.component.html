@@ -1,14 +1,35 @@
 <h2>My Stations</h2>
+<table>
+  <thead>
+    <td>ID</td>
+    <td>Cím</td>
+    <td>95</td>
+    <td>Diesel</td>
+    <td>Módosítás</td>
+  </thead>
+  <tbody>
+    <tr *ngFor="let station of stations">
+    <td>{{station.id}}</td>
+    <td>{{station.address}}</td>
+    <td>{{station.state}}</td>
+    <td>nincs</td>
+    <td><a [routerLink]="['/stations', station.id]">Módosít</a></td>
+  </tr>
+  </tbody>
+</table>
+
+
+<!--h2>My Stations</h2>
 <ul class="stations">
   <li *ngFor="let station of stations">
-    <button type="button">
+    <button type="button" [routerLink]="['/stations', station.id]">
       <span class="badge">{{station.id}}</span>
       <span class="address">{{station.address}}</span>
       <span class="filler"></span>
       <span class="state">{{station.state}}</span>
     </button>
   </li>
-</ul>
+</ul-->
 
 <!-- h2>{{station.address | uppercase }} Details</h2>
 <div><span>id: </span>{{station.id}}</div>
