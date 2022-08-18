@@ -1,23 +1,29 @@
 <div *ngIf="station">
     <p>{{station.address}}</p>
-<table>
+<table class="table table-bordered">
+    <thead class="thead-dark">
     <tr>
         <td>Üzemanyag típusa</td>
         <td>Jelenlegi státusz</td>
         <td>Módosítás</td>
     </tr>
+   </thead>
+   <tbody>
     <tr *ngFor="let fuel of fuelTypes; let i = index">
         <td>{{fuel}}</td>
         <td>Van</td>
         <td>
-            <button style="background: rgb(235, 95, 95)" 
+            <button style="background: rgb(235, 95, 95)"
+                    class="btn" 
                     (click)="outOfFuel(fuel, i)"
                     [disabled]="clicked[i]">Nincs</button>
-            <button style="background: rgb(138, 247, 138)" 
+                    <span></span>
+            <button style="background: rgb(138, 247, 138)"
+                    class="btn"  
                     (click)="thereIsFuel(fuel, i)"
                     [disabled]="clicked[i]">Van</button>
         </td>
     </tr>
-    
+</tbody>
 </table>
 </div>

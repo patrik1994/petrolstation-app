@@ -28,12 +28,12 @@ export class ModifyStationComponent implements OnInit {
   }
 
   outOfFuel(_input: any, _rowIndex: any) {
-    console.log("outOfFuel: " + _input + " rowindex: " + _rowIndex) ;
+    //console.log("outOfFuel: " + _input + " rowindex: " + _rowIndex) ;
     this.clicked[_rowIndex] = true;
   }
 
   thereIsFuel(_input: any, _rowIndex: any) {
-    console.log("thereIsFuel: " + _input + " rowindex: " + _rowIndex);
+    //console.log("thereIsFuel: " + _input + " rowindex: " + _rowIndex);
     this.clicked[_rowIndex] = true;
   }
 
