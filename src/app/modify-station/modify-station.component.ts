@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MyFuelType } from '../model/myFuelType';
 
 @Component({
   selector: 'app-modify-station',
@@ -7,8 +6,6 @@ import { MyFuelType } from '../model/myFuelType';
   styleUrls: ['./modify-station.component.css']
 })
 export class ModifyStationComponent implements OnInit {
-
-  fuelTypes = MyFuelType;
 
   constructor() { }
 
