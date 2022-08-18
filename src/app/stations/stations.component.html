@@ -8,10 +8,9 @@
     <td>Módosítás</td>
   </thead>
   <tbody>
-    <tr *ngFor="let station of stations">
+    <tr *ngFor="let station of petrolStations">
     <td>{{station.id}}</td>
-    <td>{{station.address}}</td>
-    <td>{{station.state}}</td>
+    <td>{{station.city}}</td>
     <td>nincs</td>
     <td><a [routerLink]="['/stations', station.id]">Módosít</a></td>
   </tr>

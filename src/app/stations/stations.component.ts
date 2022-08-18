@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Station } from '../station';
 import { STATIONS } from '../mock-stations';
+import { PetrolStationService } from 'src/OpenApi/services';
+import { PetrolStationDto } from 'src/OpenApi/models';
 
 @Component({
   selector: 'app-stations',
@@ -10,10 +12,14 @@ import { STATIONS } from '../mock-stations';
 export class StationsComponent implements OnInit {
 
   stations = STATIONS;
+  petrolStations: PetrolStationDto[] = [];
 
-  constructor() { }
+  constructor(private petrolStationService: PetrolStationService ) { }
 
   ngOnInit(): void {
+    this.petrolStationService
+      .apiPetrolStationGetPetrolStationsGet()
+      .subscribe((petrolStations) => (this.petrolStations = petrolStations));
   }
 
 }
