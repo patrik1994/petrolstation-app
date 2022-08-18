@@ -18,10 +18,6 @@ import { ModifyStationComponent } from './modify-station/modify-station.componen
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: StationsComponent },
-      { path: 'stations/:stationId', component: ModifyStationComponent}
-    ]),
   ],
   providers: [],
   bootstrap: [AppComponent]
