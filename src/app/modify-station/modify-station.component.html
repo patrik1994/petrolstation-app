@@ -1,6 +1,5 @@
-<p>modify-station works!</p>
-<p>Budapest I, Alkotás u. 20-24.</p>
-<!-- p>{{currentStation.address}}</p -->
+<div *ngIf="station">
+    <p>{{station.address}}</p>
 <table>
     <tr>
         <td>Üzemanyag típusa</td>
@@ -11,9 +10,10 @@
         <td>{{fuel}}</td>
         <td>Van</td>
         <td>
-            <button style="background: rgb(235, 95, 95)">Nincs</button>
-            <button style="background: rgb(138, 247, 138)">Van</button>
+            <button style="background: rgb(235, 95, 95)" (click)="outOfFuel(fuel)">Nincs</button>
+            <button style="background: rgb(138, 247, 138)" (click)="thereIsFuel(fuel)">Van</button>
         </td>
     </tr>
     
 </table>
+</div>
