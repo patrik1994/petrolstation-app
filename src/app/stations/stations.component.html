@@ -2,7 +2,6 @@
 <table class="table table-bordered">
   <thead class="thead-dark">
     <tr>
-    <td>ID</td>
     <td>Város</td>
     <td>Utca</td>
     <td>95</td>
@@ -12,7 +11,6 @@
   </thead>
   <tbody>
     <tr *ngFor="let station of petrolStations | slice: (page-1) * pageSize : page * pageSize" >
-    <td>{{station.id}}</td>
     <td>{{station.city}}</td>
     <td>{{station.street}}</td>
     <td>nincs</td>
@@ -23,8 +21,6 @@
 </table>
 
 <br/>
-<h1>GeeksforGeeks</h1>
-<h3>Angular ng bootstrap</h3>
 <ngb-pagination
   [(page)]="page"
   [pageSize]="pageSize"
