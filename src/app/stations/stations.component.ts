@@ -14,6 +14,9 @@ export class StationsComponent implements OnInit {
   stations = STATIONS;
   petrolStations: PetrolStationDto[] = [];
 
+  page = 1;
+  pageSize = 25;
+
   constructor(private petrolStationService: PetrolStationService ) { }
 
   ngOnInit(): void {
