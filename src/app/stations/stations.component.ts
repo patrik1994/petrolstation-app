@@ -46,8 +46,6 @@ export class StationsComponent implements OnInit {
   search(text: string, pipe: PipeTransform): PetrolStationDto[] {
     return this.petrolStations.filter(ps => {
       const term = text.toLowerCase();
-      
-     // console.log("ps street: " + ps.street);
 
       return ps.city!.toLowerCase().includes(term)
           || ps.street!.toLowerCase().includes(term)
