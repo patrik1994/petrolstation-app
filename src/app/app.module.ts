@@ -23,7 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ApiModule,
+    ApiModule.forRoot({ rootUrl: 'https://petrol-station-backend.herokuapp.com' }),
     ReactiveFormsModule,
   ],
   providers: [],

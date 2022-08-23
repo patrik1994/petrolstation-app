@@ -1,8 +1,6 @@
 import { Component, OnInit, PipeTransform } from '@angular/core';
-import { Station } from '../station';
 import { STATIONS } from '../mock-stations';
 import { PetrolStationService } from 'src/OpenApi/services';
-import { PetrolStationDto } from 'src/OpenApi/models';
 import { FormControl } from '@angular/forms';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
@@ -10,6 +8,7 @@ import { DecimalPipe } from '@angular/common';
 
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
 
 @Component({
   selector: 'app-stations',
@@ -20,16 +19,16 @@ import { map, startWith } from 'rxjs/operators';
 export class StationsComponent implements OnInit {
 
   stations = STATIONS; //fixme delete this line?
-  petrolStations: PetrolStationDto[] = [];
+  petrolStations: PetrolStationWithStatusesViewDto[] = [];
 
   page = 1;
   pageSize = 25;
 
-  stations$: Observable<PetrolStationDto[]>;
+  stations$: Observable<PetrolStationWithStatusesViewDto[]>;
   filter = new FormControl('', {nonNullable: true});
-  
-  
-  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe ) 
+
+
+  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe )
   {
     this.stations$ = this.filter.valueChanges.pipe(
       startWith(''),
@@ -43,7 +42,7 @@ export class StationsComponent implements OnInit {
       .subscribe((petrolStations) => (this.petrolStations = petrolStations));
   }
 
-  search(text: string, pipe: PipeTransform): PetrolStationDto[] {
+  search(text: string, pipe: PipeTransform): PetrolStationWithStatusesViewDto[] {
     return this.petrolStations.filter(ps => {
       const term = text.toLowerCase();
 
@@ -52,5 +51,4 @@ export class StationsComponent implements OnInit {
           ;
     });
   }
-
 }
