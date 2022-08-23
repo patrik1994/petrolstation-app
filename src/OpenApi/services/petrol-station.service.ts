@@ -9,7 +9,9 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { PetrolStationDto } from '../models/petrol-station-dto';
+import { PetrolStationCreateDto } from '../models/petrol-station-create-dto';
+import { PetrolStationViewDto } from '../models/petrol-station-view-dto';
+import { PetrolStationWithStatusesViewDto } from '../models/petrol-station-with-statuses-view-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +36,7 @@ export class PetrolStationService extends BaseService {
    * This method doesn't expect any request body.
    */
   apiPetrolStationGetPetrolStationsGet$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<PetrolStationDto>>> {
+  }): Observable<StrictHttpResponse<Array<PetrolStationWithStatusesViewDto>>> {
 
     const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationGetPetrolStationsGetPath, 'get');
     if (params) {
@@ -46,7 +48,7 @@ export class PetrolStationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<PetrolStationDto>>;
+        return r as StrictHttpResponse<Array<PetrolStationWithStatusesViewDto>>;
       })
     );
   }
@@ -58,10 +60,10 @@ export class PetrolStationService extends BaseService {
    * This method doesn't expect any request body.
    */
   apiPetrolStationGetPetrolStationsGet(params?: {
-  }): Observable<Array<PetrolStationDto>> {
+  }): Observable<Array<PetrolStationWithStatusesViewDto>> {
 
     return this.apiPetrolStationGetPetrolStationsGet$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<PetrolStationDto>>) => r.body as Array<PetrolStationDto>)
+      map((r: StrictHttpResponse<Array<PetrolStationWithStatusesViewDto>>) => r.body as Array<PetrolStationWithStatusesViewDto>)
     );
   }
 
@@ -77,8 +79,8 @@ export class PetrolStationService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   apiPetrolStationCreatePetrolStationPost$Response(params?: {
-    body?: PetrolStationDto
-  }): Observable<StrictHttpResponse<PetrolStationDto>> {
+    body?: PetrolStationCreateDto
+  }): Observable<StrictHttpResponse<PetrolStationViewDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationCreatePetrolStationPostPath, 'post');
     if (params) {
@@ -91,7 +93,7 @@ export class PetrolStationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<PetrolStationDto>;
+        return r as StrictHttpResponse<PetrolStationViewDto>;
       })
     );
   }
@@ -103,11 +105,11 @@ export class PetrolStationService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   apiPetrolStationCreatePetrolStationPost(params?: {
-    body?: PetrolStationDto
-  }): Observable<PetrolStationDto> {
+    body?: PetrolStationCreateDto
+  }): Observable<PetrolStationViewDto> {
 
     return this.apiPetrolStationCreatePetrolStationPost$Response(params).pipe(
-      map((r: StrictHttpResponse<PetrolStationDto>) => r.body as PetrolStationDto)
+      map((r: StrictHttpResponse<PetrolStationViewDto>) => r.body as PetrolStationViewDto)
     );
   }
 
@@ -124,8 +126,8 @@ export class PetrolStationService extends BaseService {
    */
   apiPetrolStationPetrolStationIdPut$Response(params: {
     petrolStationId: number;
-    body?: PetrolStationDto
-  }): Observable<StrictHttpResponse<PetrolStationDto>> {
+    body?: PetrolStationViewDto
+  }): Observable<StrictHttpResponse<PetrolStationViewDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationPetrolStationIdPutPath, 'put');
     if (params) {
@@ -139,7 +141,7 @@ export class PetrolStationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<PetrolStationDto>;
+        return r as StrictHttpResponse<PetrolStationViewDto>;
       })
     );
   }
@@ -152,11 +154,11 @@ export class PetrolStationService extends BaseService {
    */
   apiPetrolStationPetrolStationIdPut(params: {
     petrolStationId: number;
-    body?: PetrolStationDto
-  }): Observable<PetrolStationDto> {
+    body?: PetrolStationViewDto
+  }): Observable<PetrolStationViewDto> {
 
     return this.apiPetrolStationPetrolStationIdPut$Response(params).pipe(
-      map((r: StrictHttpResponse<PetrolStationDto>) => r.body as PetrolStationDto)
+      map((r: StrictHttpResponse<PetrolStationViewDto>) => r.body as PetrolStationViewDto)
     );
   }
 

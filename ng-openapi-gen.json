@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "input": "https://petrol-station-backend.herokuapp.com/swagger/v1/swagger.json",
+  "output": "src/OpenApi",
+  "ignoreUnusedModels": false,
+  "spaces": 2,
+  "generator-cli": {
+    "version": "6.0.1"
+  }
+}

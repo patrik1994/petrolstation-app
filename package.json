@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
-    "build": "ng build",
+    "start": "npm run ng-openapi-gen && node server.js",
+    "build": "npm run ng-openapi-gen && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "heroku-postbuild": "ng build"
+    "heroku-postbuild": "ng build",
+    "generate:api": "openapi-generator-cli generate -i ./openapi.yaml -g typescript-angular -o src/app/core/api/v1",
+    "ng-openapi-gen": "ng-openapi-gen"
   },
   "private": true,
   "dependencies": {
