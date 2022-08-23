@@ -47,7 +47,6 @@ export class StationsComponent implements OnInit {
     return this.petrolStations.filter(ps => {
       const term = text.toLowerCase();
 
-
       return ps.city!.toLowerCase().includes(term)
           || ps.street!.toLowerCase().includes(term)
           ;
