@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AppComponent {
   title = 'petrolstation-app';
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal, @Inject(DOCUMENT) private document: Document){
+  }
+
+  ngOnInit() {
+    this.document.documentElement.lang = 'hu'; 
   }
 
   public open(modal: any): void {
