@@ -1,5 +1,5 @@
 <div *ngIf="station">
-    <p>{{station.address}}</p>
+    <p>{{station.city}}</p>
 <table class="table table-bordered">
     <thead class="thead-dark">
     <tr>
@@ -14,12 +14,12 @@
         <td>Van</td>
         <td>
             <button style="background: rgb(235, 95, 95)"
-                    class="btn" 
+                    class="btn"
                     (click)="outOfFuel(fuel, i)"
                     [disabled]="clicked[i]">Nincs</button>
                     <span></span>
             <button style="background: rgb(138, 247, 138)"
-                    class="btn"  
+                    class="btn"
                     (click)="thereIsFuel(fuel, i)"
                     [disabled]="clicked[i]">Van</button>
         </td>
