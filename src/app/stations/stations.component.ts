@@ -9,6 +9,7 @@ import { DecimalPipe } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
+import { StationContainerService } from '../station-container.service';
 
 @Component({
   selector: 'app-stations',
@@ -19,16 +20,17 @@ import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-stat
 export class StationsComponent implements OnInit {
 
   stations = STATIONS; //fixme delete this line?
-  petrolStations: PetrolStationWithStatusesViewDto[] = [];
+  //petrolStations: PetrolStationWithStatusesViewDto[] = [];
 
   page = 1;
   pageSize = 25;
+  collectionSize = 0;
 
   stations$: Observable<PetrolStationWithStatusesViewDto[]>;
   filter = new FormControl('', {nonNullable: true});
 
 
-  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe )
+  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
   {
     this.stations$ = this.filter.valueChanges.pipe(
       startWith(''),
@@ -39,11 +41,14 @@ export class StationsComponent implements OnInit {
   ngOnInit(): void {
     this.petrolStationService
       .apiPetrolStationGetPetrolStationsGet()
-      .subscribe((petrolStations) => (this.petrolStations = petrolStations));
+      .subscribe((petrolStations) => {
+        this.stationContainerService.petrolStations = petrolStations;
+          this.collectionSize = petrolStations.length;
+    });
   }
 
   search(text: string, pipe: PipeTransform): PetrolStationWithStatusesViewDto[] {
-    return this.petrolStations.filter(ps => {
+    return this.stationContainerService.petrolStations.filter(ps => {
       const term = text.toLowerCase();
 
       return ps.city!.toLowerCase().includes(term)
