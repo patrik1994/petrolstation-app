@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
-import { PetrolStationService } from 'src/OpenApi/services';
-import { STATIONS } from '../mock-stations';
-import { Station } from '../station';
+import { PetrolStationViewDto, StatusCreateDto } from 'src/OpenApi/models';
+import { PetrolStationService, StatusService } from 'src/OpenApi/services';
 import { StationContainerService } from '../station-container.service';
 
 @Component({
@@ -15,7 +14,7 @@ export class ModifyStationComponent implements OnInit {
   station!: PetrolStationWithStatusesViewDto | undefined;
   fuelTypes = ["95-ös benzin", "Diesel", "98-as benzin", "100-as benzin", "95-ös prémium benzin", "Prémium diesel"];
 
-  stations = STATIONS;
+  //stations = STATIONS;
   clicked: boolean[] = [false];
 
   constructor( private route: ActivatedRoute, private stationContainerService: StationContainerService, private petrolStationService: PetrolStationService ) { }
@@ -40,6 +39,14 @@ export class ModifyStationComponent implements OnInit {
 
   outOfFuel(_input: any, _rowIndex: any) {
     //console.log("outOfFuel: " + _input + " rowindex: " + _rowIndex) ;
+     const statusCreateDto: StatusCreateDto = {
+      fuelType: 1,
+    isThereFuel: true,
+    petrolStationId: 1695
+  };
+
+    this.statusService.apiStatusCreateStatusPost({body: statusCreateDto});
+    
     this.clicked[_rowIndex] = true;
   }
 
