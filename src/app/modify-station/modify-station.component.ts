@@ -74,13 +74,13 @@ function getFuelTypeId(_input: any) {
   switch (_input) {
     case "95-ös benzin":
       return 0;
-    case "Diesel":
-      return 1;
     case "98-as benzin":
-      return 2;
+      return 1;
     case "100-as benzin":
-      return 3;
+      return 2;  
     case "95-ös prémium benzin":
+      return 3;  
+    case "Diesel":
       return 4;
     case "Prémium diesel":
       return 5;
