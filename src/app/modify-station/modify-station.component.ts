@@ -17,7 +17,7 @@ export class ModifyStationComponent implements OnInit {
   //stations = STATIONS;
   clicked: boolean[] = [false];
 
-  constructor( private route: ActivatedRoute, private stationContainerService: StationContainerService, private petrolStationService: PetrolStationService ) { }
+  constructor( private route: ActivatedRoute, private stationContainerService: StationContainerService, private petrolStationService: PetrolStationService, private statusService: StatusService ) { }
 
   ngOnInit(): void {
     const routeParams = this.route.snapshot.paramMap;
@@ -45,8 +45,8 @@ export class ModifyStationComponent implements OnInit {
     petrolStationId: 1695
   };
 
-    this.statusService.apiStatusCreateStatusPost({body: statusCreateDto});
-    
+    this.statusService.apiStatusCreateStatusPost({body: statusCreateDto}).subscribe( /* TODO response success save to user */ ) );
+
     this.clicked[_rowIndex] = true;
   }
 
