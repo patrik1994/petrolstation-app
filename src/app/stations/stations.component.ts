@@ -1,5 +1,4 @@
 import { Component, OnInit, PipeTransform } from '@angular/core';
-import { STATIONS } from '../mock-stations';
 import { PetrolStationService } from 'src/OpenApi/services';
 import { FormControl } from '@angular/forms';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
@@ -19,8 +18,7 @@ import { StationContainerService } from '../station-container.service';
 })
 export class StationsComponent implements OnInit {
 
-  stations = STATIONS; //fixme delete this line?
-  //petrolStations: PetrolStationWithStatusesViewDto[] = [];
+
 
   page = 1;
   pageSize = 25;
