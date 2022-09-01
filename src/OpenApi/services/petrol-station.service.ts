@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { PetrolStationCreateDto } from '../models/petrol-station-create-dto';
+import { PetrolStationPaginationResultDto } from '../models/petrol-station-pagination-result-dto';
 import { PetrolStationViewDto } from '../models/petrol-station-view-dto';
 import { PetrolStationWithStatusesViewDto } from '../models/petrol-station-with-statuses-view-dto';
 
@@ -36,10 +37,16 @@ export class PetrolStationService extends BaseService {
    * This method doesn't expect any request body.
    */
   apiPetrolStationGetPetrolStationsGet$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<PetrolStationWithStatusesViewDto>>> {
+    filter?: string;
+    count?: number;
+    page?: number;
+  }): Observable<StrictHttpResponse<PetrolStationPaginationResultDto>> {
 
     const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationGetPetrolStationsGetPath, 'get');
     if (params) {
+      rb.query('filter', params.filter, {});
+      rb.query('count', params.count, {});
+      rb.query('page', params.page, {});
     }
 
     return this.http.request(rb.build({
@@ -48,7 +55,7 @@ export class PetrolStationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<PetrolStationWithStatusesViewDto>>;
+        return r as StrictHttpResponse<PetrolStationPaginationResultDto>;
       })
     );
   }
@@ -60,31 +67,34 @@ export class PetrolStationService extends BaseService {
    * This method doesn't expect any request body.
    */
   apiPetrolStationGetPetrolStationsGet(params?: {
-  }): Observable<Array<PetrolStationWithStatusesViewDto>> {
+    filter?: string;
+    count?: number;
+    page?: number;
+  }): Observable<PetrolStationPaginationResultDto> {
 
     return this.apiPetrolStationGetPetrolStationsGet$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<PetrolStationWithStatusesViewDto>>) => r.body as Array<PetrolStationWithStatusesViewDto>)
+      map((r: StrictHttpResponse<PetrolStationPaginationResultDto>) => r.body as PetrolStationPaginationResultDto)
     );
   }
 
   /**
-   * Path part for operation apiPetrolStationCreatePetrolStationPost
+   * Path part for operation apiPetrolStationPetrolStationIdGet
    */
-  static readonly ApiPetrolStationCreatePetrolStationPostPath = '/api/PetrolStation/CreatePetrolStation';
+  static readonly ApiPetrolStationPetrolStationIdGetPath = '/api/PetrolStation/{petrolStationId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `apiPetrolStationCreatePetrolStationPost()` instead.
+   * To access only the response body, use `apiPetrolStationPetrolStationIdGet()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  apiPetrolStationCreatePetrolStationPost$Response(params?: {
-    body?: PetrolStationCreateDto
-  }): Observable<StrictHttpResponse<PetrolStationViewDto>> {
+  apiPetrolStationPetrolStationIdGet$Response(params: {
+    petrolStationId: number;
+  }): Observable<StrictHttpResponse<PetrolStationWithStatusesViewDto>> {
 
-    const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationCreatePetrolStationPostPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationPetrolStationIdGetPath, 'get');
     if (params) {
-      rb.body(params.body, 'application/json');
+      rb.path('petrolStationId', params.petrolStationId, {});
     }
 
     return this.http.request(rb.build({
@@ -93,23 +103,23 @@ export class PetrolStationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<PetrolStationViewDto>;
+        return r as StrictHttpResponse<PetrolStationWithStatusesViewDto>;
       })
     );
   }
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `apiPetrolStationCreatePetrolStationPost$Response()` instead.
+   * To access the full response (for headers, for example), `apiPetrolStationPetrolStationIdGet$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  apiPetrolStationCreatePetrolStationPost(params?: {
-    body?: PetrolStationCreateDto
-  }): Observable<PetrolStationViewDto> {
+  apiPetrolStationPetrolStationIdGet(params: {
+    petrolStationId: number;
+  }): Observable<PetrolStationWithStatusesViewDto> {
 
-    return this.apiPetrolStationCreatePetrolStationPost$Response(params).pipe(
-      map((r: StrictHttpResponse<PetrolStationViewDto>) => r.body as PetrolStationViewDto)
+    return this.apiPetrolStationPetrolStationIdGet$Response(params).pipe(
+      map((r: StrictHttpResponse<PetrolStationWithStatusesViewDto>) => r.body as PetrolStationWithStatusesViewDto)
     );
   }
 
@@ -158,6 +168,52 @@ export class PetrolStationService extends BaseService {
   }): Observable<PetrolStationViewDto> {
 
     return this.apiPetrolStationPetrolStationIdPut$Response(params).pipe(
+      map((r: StrictHttpResponse<PetrolStationViewDto>) => r.body as PetrolStationViewDto)
+    );
+  }
+
+  /**
+   * Path part for operation apiPetrolStationCreatePetrolStationPost
+   */
+  static readonly ApiPetrolStationCreatePetrolStationPostPath = '/api/PetrolStation/CreatePetrolStation';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiPetrolStationCreatePetrolStationPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  apiPetrolStationCreatePetrolStationPost$Response(params?: {
+    body?: PetrolStationCreateDto
+  }): Observable<StrictHttpResponse<PetrolStationViewDto>> {
+
+    const rb = new RequestBuilder(this.rootUrl, PetrolStationService.ApiPetrolStationCreatePetrolStationPostPath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<PetrolStationViewDto>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `apiPetrolStationCreatePetrolStationPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  apiPetrolStationCreatePetrolStationPost(params?: {
+    body?: PetrolStationCreateDto
+  }): Observable<PetrolStationViewDto> {
+
+    return this.apiPetrolStationCreatePetrolStationPost$Response(params).pipe(
       map((r: StrictHttpResponse<PetrolStationViewDto>) => r.body as PetrolStationViewDto)
     );
   }
