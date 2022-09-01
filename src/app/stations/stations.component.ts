@@ -1,4 +1,4 @@
-import { Component, OnInit, PipeTransform } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PetrolStationService } from 'src/OpenApi/services';
 import { FormControl } from '@angular/forms';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
@@ -7,22 +7,29 @@ import { DecimalPipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { count, map, startWith } from 'rxjs/operators';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
 import { StationContainerService } from '../station-container.service';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-stations',
   templateUrl: './stations.component.html',
-  styleUrls: ['./stations.component.css'],
-  providers: [DecimalPipe]
+  styleUrls: ['./stations.component.css']
 })
-export class StationsComponent implements OnInit {
 
+export class StationsComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<PetrolStationWithStatusesViewDto>([]);
+  displayedColums = [
+    'city',
+  ];
 
-  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
+
+  constructor(private petrolStationService: PetrolStationService, private stationContainerService: StationContainerService )
   {}
 
   ngOnInit(): void {
@@ -31,8 +38,29 @@ export class StationsComponent implements OnInit {
 
   }
 
+  ngAfterViewInit() {
+    this.sort.disableClear = true;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+/*
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'subtotalGrossPrice': return item[property];
+        case 'arrears': return item[property];
+        case 'companyCurrentAccountNumber': return this.getCurrentAccountNumber(item.companyTaxNumber);
+        default: return item[property]?.toLowerCase();
+      }
+    };
+*//*
+    this.dataSource.filterPredicate = this.filterPredicate;
+    this.filterForm.valueChanges.pipe(
+      startWith(''),
+      debounceTime(Constants.FilterDebounceTime),
+      distinctUntilChanged()).subscribe(() => this.dataSource.filter = '#');
+    */}
+
   refreshPetrolStations() {
-    this.petrolStationService.apiPetrolStationGetPetrolStationsGet()
+    this.petrolStationService.apiPetrolStationGetPetrolStationsGet( {count: 20, page:1} )
       .subscribe(petrolStations =>
                 this.dataSource.data = petrolStations.petrolStations!
     );}
