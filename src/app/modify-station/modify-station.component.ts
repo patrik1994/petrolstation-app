@@ -30,7 +30,7 @@ export class ModifyStationComponent implements OnInit {
       this.petrolStationService
       .apiPetrolStationGetPetrolStationsGet()
       .subscribe((petrolStations) => {
-        this.stationContainerService.petrolStations = petrolStations;
+        this.stationContainerService.petrolStations = petrolStations.petrolStations!;
         this.station = this.stationContainerService.petrolStations.find(s => s.id === this.stationIdFromRoute );
 
         this.fillStatusList();
@@ -43,9 +43,9 @@ export class ModifyStationComponent implements OnInit {
   }
 
   fillStatusList() {
-   // console.log("init statuses" + this.station?.statuses); 
+   // console.log("init statuses" + this.station?.statuses);
     this.statusList = this.station?.statuses!;
-      
+
     this.statusList?.forEach((element) => {
       //console.log("element: " + element.fuelType + " isthere: " + element.isThereFuel);
       if (element.fuelType !== undefined) {
@@ -61,7 +61,7 @@ export class ModifyStationComponent implements OnInit {
       } else {
         this.fuelListResult[index] = "nincs";
       }
-      
+
     });
   }
 
@@ -105,9 +105,9 @@ function getFuelTypeId(_input: any) {
     case "98-as benzin":
       return 1;
     case "100-as benzin":
-      return 2;  
+      return 2;
     case "95-ös prémium benzin":
-      return 3;  
+      return 3;
     case "Diesel":
       return 4;
     case "Prémium diesel":

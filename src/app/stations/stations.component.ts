@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import { DecimalPipe } from '@angular/common';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -19,6 +20,24 @@ import { StationContainerService } from '../station-container.service';
 export class StationsComponent implements OnInit {
 
 
+  dataSource = new MatTableDataSource<PetrolStationWithStatusesViewDto>([]);
+
+  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
+  {}
+
+  ngOnInit(): void {
+
+    this.refreshPetrolStations();
+
+  }
+
+  refreshPetrolStations() {
+    this.petrolStationService.apiPetrolStationGetPetrolStationsGet()
+      .subscribe(petrolStations =>
+                this.dataSource.data = petrolStations.petrolStations!
+    );}
+      }
+/*
 
   page = 1;
   pageSize = 25;
@@ -26,9 +45,10 @@ export class StationsComponent implements OnInit {
 
   stations$: Observable<PetrolStationWithStatusesViewDto[]>;
   filter = new FormControl('', {nonNullable: true});
+*/
 
 
-  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
+/*  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
   {
     this.stations$ = this.filter.valueChanges.pipe(
       startWith(''),
@@ -37,12 +57,14 @@ export class StationsComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.petrolStationService
+  this.petrolStationService
       .apiPetrolStationGetPetrolStationsGet()
       .subscribe((petrolStations) => {
         this.stationContainerService.petrolStations = petrolStations;
           this.collectionSize = petrolStations.length;
     });
+
+
   }
 
   search(text: string, pipe: PipeTransform): PetrolStationWithStatusesViewDto[] {
@@ -53,5 +75,5 @@ export class StationsComponent implements OnInit {
           || ps.street!.toLowerCase().includes(term)
           ;
     });
-  }
-}
+  }*/
+

@@ -1,5 +1,23 @@
 <h2 class="title">Kutak listája</h2>
 
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef> Város </th>
+    <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+  </ng-container>
+</table>
+
+
+
+
+
+<!--
 <form>
   <div class="mb-3 row">
     <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
@@ -39,4 +57,4 @@
 
 
 
-<p>A benzinkutak listájáért köszönet a <a href="https://holtankoljak.hu">holtankoljak.hu</a>-nak</p>
+<p>A benzinkutak listájáért köszönet a <a href="https://holtankoljak.hu">holtankoljak.hu</a>-nak</p>-->

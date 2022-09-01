@@ -11,6 +11,7 @@ import { StationsComponent } from './stations/stations.component';
 import { ModifyStationComponent } from './modify-station/modify-station.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ApiModule.forRoot({ rootUrl: 'https://petrol-station-backend.herokuapp.com' }),
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
