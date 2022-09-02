@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PetrolStationService } from 'src/OpenApi/services';
 import { FormControl } from '@angular/forms';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { DecimalPipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,60 +11,60 @@ import { count, map, startWith } from 'rxjs/operators';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
 import { StationContainerService } from '../station-container.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
+/*
+feel free to fix it
+https://material.angular.io/components/paginator/examples
+*/
 @Component({
   selector: 'app-stations',
   templateUrl: './stations.component.html',
-  styleUrls: ['./stations.component.css']
+  styleUrls: ['./stations.component.css'],
 })
-
 export class StationsComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<PetrolStationWithStatusesViewDto>([]);
-  displayedColums = [
-    'city',
-  ];
+  displayedColums = ['city',"street"];
+  pageSize = 10;
 
+  // MatPaginator Output
+  pageEvent: PageEvent;
 
-  constructor(private petrolStationService: PetrolStationService, private stationContainerService: StationContainerService )
-  {}
+  constructor(
+    private petrolStationService: PetrolStationService,
+    private stationContainerService: StationContainerService
+  ) {}
 
   ngOnInit(): void {
-
     this.refreshPetrolStations();
-
   }
 
   ngAfterViewInit() {
     this.sort.disableClear = true;
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-/*
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'subtotalGrossPrice': return item[property];
-        case 'arrears': return item[property];
-        case 'companyCurrentAccountNumber': return this.getCurrentAccountNumber(item.companyTaxNumber);
-        default: return item[property]?.toLowerCase();
-      }
-    };
-*//*
-    this.dataSource.filterPredicate = this.filterPredicate;
-    this.filterForm.valueChanges.pipe(
-      startWith(''),
-      debounceTime(Constants.FilterDebounceTime),
-      distinctUntilChanged()).subscribe(() => this.dataSource.filter = '#');
-    */}
+  }
 
   refreshPetrolStations() {
-    this.petrolStationService.apiPetrolStationGetPetrolStationsGet( {count: 20, page:1} )
-      .subscribe(petrolStations =>
-                this.dataSource.data = petrolStations.petrolStations!
-    );}
-      }
+    this.petrolStationService
+      .apiPetrolStationGetPetrolStationsGet({
+        count: this.pageSize,
+        page: this.pageEvent?.pageIndex ?? 1,
+      })
+      .subscribe((petrolStations) => {
+        (this.dataSource.data = petrolStations.petrolStations!),
+          (this.dataSource.data.length = petrolStations.totalCount!);
+      });
+  }
+
+  public getServerData(event?: PageEvent) {
+    this.refreshPetrolStations();
+    return event;
+  }
+}
+
 /*
 
   page = 1;
@@ -74,7 +74,6 @@ export class StationsComponent implements OnInit, AfterViewInit {
   stations$: Observable<PetrolStationWithStatusesViewDto[]>;
   filter = new FormControl('', {nonNullable: true});
 */
-
 
 /*  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
   {
@@ -104,4 +103,3 @@ export class StationsComponent implements OnInit, AfterViewInit {
           ;
     });
   }*/
-
