@@ -23,12 +23,15 @@ https://material.angular.io/components/paginator/examples
   styleUrls: ['./stations.component.css'],
 })
 export class StationsComponent implements OnInit, AfterViewInit {
-
   @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<PetrolStationWithStatusesViewDto>([]);
   displayedColums = ['city',"street"];
+
+  length = 100;
+  pageIndex = 0;
   pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
 
   // MatPaginator Output
   pageEvent: PageEvent;
@@ -45,13 +48,14 @@ export class StationsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.sort.disableClear = true;
     this.dataSource.sort = this.sort;
+
   }
 
   refreshPetrolStations() {
     this.petrolStationService
       .apiPetrolStationGetPetrolStationsGet({
         count: this.pageSize,
-        page: this.pageEvent?.pageIndex ?? 1,
+        page: this.pageIndex,
       })
       .subscribe((petrolStations) => {
         (this.dataSource.data = petrolStations.petrolStations!),
@@ -60,8 +64,8 @@ export class StationsComponent implements OnInit, AfterViewInit {
   }
 
   public getServerData(event?: PageEvent) {
+    this.pageIndex = event?.pageIndex!;
     this.refreshPetrolStations();
-    return event;
   }
 }
 
