@@ -1,5 +1,29 @@
 <h2 class="title">Kutak listája</h2>
 
+<mat-expansion-panel class="filter-panel">
+
+  <mat-expansion-panel-header>
+      <mat-panel-title>
+          szűrő
+      </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="filterForm">
+      <mat-form-field appearance="outline">
+          <mat-label> város </mat-label>
+          <input matInput formControlName="city">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+          <mat-label> utca </mat-label>
+          <input matInput formControlName="street">
+      </mat-form-field>
+
+      <button mat-flat-button (click)="resetFilters()">
+          szűrő tölés
+      </button>
+  </form>
+</mat-expansion-panel>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="city">" matSortDirection="asc">
 
