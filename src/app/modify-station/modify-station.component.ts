@@ -35,11 +35,11 @@ export class ModifyStationComponent implements OnInit {
   }
 
   fillStatusList() {
-    console.log("init statuses" + this.station?.statuses);
+    //console.log("init statuses" + this.station?.statuses);
     this.statusList = this.station?.statuses!;
 
     this.statusList?.forEach((element) => {
-      console.log("element: " + element.fuelType + " isthere: " + element.isThereFuel);
+      //console.log("element: " + element.fuelType + " isthere: " + element.isThereFuel);
       if (element.fuelType !== undefined) {
         if (this.fuelList[element.fuelType] === undefined) this.fuelList[element.fuelType] = 0;
         this.fuelList[element.fuelType] += element.isThereFuel ? 1 : -1;
