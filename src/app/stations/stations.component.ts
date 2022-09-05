@@ -1,22 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PetrolStationService } from 'src/OpenApi/services';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
-import { DecimalPipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
-
-import { Observable, of } from 'rxjs';
-import { count, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
-import { StationContainerService } from '../station-container.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import {  PageEvent } from '@angular/material/paginator';
 
-/*
-feel free to fix it
-https://material.angular.io/components/paginator/examples
-*/
+
 @Component({
   selector: 'app-stations',
   templateUrl: './stations.component.html',
@@ -26,7 +17,7 @@ export class StationsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<PetrolStationWithStatusesViewDto>([]);
-  displayedColums = ['city',"street"];
+  displayedColums = ['city',"street","modify"];
 
   filterForm?: FormGroup;
 
@@ -35,8 +26,8 @@ export class StationsComponent implements OnInit, AfterViewInit {
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
-  // MatPaginator Output
-  pageEvent?: PageEvent;
+  filter: string;
+  filter$ = new FormControl('', {nonNullable: true});
 
   public doFilter = (event: Event ) => {
 
@@ -45,8 +36,7 @@ export class StationsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private petrolStationService: PetrolStationService,
-    private stationContainerService: StationContainerService
+    private petrolStationService: PetrolStationService
   ) {
 
     this.filterForm = this.fb.group({
@@ -63,41 +53,25 @@ export class StationsComponent implements OnInit, AfterViewInit {
     this.sort.disableClear = true;
     this.dataSource.sort = this.sort;
 
-    this.dataSource.filterPredicate = this.filterPredicate;
-    this.filterForm.valueChanges.pipe(
+    this.filter$.valueChanges.pipe(
       startWith(''),
-      debounceTime(200),
-      distinctUntilChanged()).subscribe(() => this.dataSource.filter = '#');
-  }
-
-  filterPredicate = (data: PetrolStationWithStatusesViewDto, _: string): boolean => {
-
-    const { city, street } = this.filterForm.getRawValue();
-
-    if (city) {
-      const value = city.toLowerCase();
-      if (data.city.toLowerCase().includes(value) == false)
-        return false;
-    }
-
-    if (street) {
-      const value = street.toLowerCase();
-      if (data.street.toLowerCase().includes(value) == false)
-        return false;
-    }
-
-    return true;
+      debounceTime(400),
+      distinctUntilChanged()).subscribe(filter => {
+        this.filter = filter,
+        this.refreshPetrolStations()
+      });
   }
 
   refreshPetrolStations() {
     this.petrolStationService
       .apiPetrolStationGetPetrolStationsGet({
+        filter: this.filter,
         count: this.pageSize,
         page: this.pageIndex,
       })
       .subscribe((petrolStations) => {
         (this.dataSource.data = petrolStations.petrolStations!),
-          (this.dataSource.data.length = petrolStations.totalCount!);
+          (this.length = petrolStations.totalCount!);
       });
   }
 
@@ -107,45 +81,7 @@ export class StationsComponent implements OnInit, AfterViewInit {
 
   public getServerData(event?: PageEvent) {
     this.pageIndex = event?.pageIndex!;
+    this.pageSize = event?.pageSize!;
     this.refreshPetrolStations();
   }
 }
-
-/*
-
-  page = 1;
-  pageSize = 25;
-  collectionSize = 0;
-
-  stations$: Observable<PetrolStationWithStatusesViewDto[]>;
-  filter = new FormControl('', {nonNullable: true});
-*/
-
-/*  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
-  {
-    this.stations$ = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => this.search(text, pipe))
-    );
-   }
-
-  ngOnInit(): void {
-  this.petrolStationService
-      .apiPetrolStationGetPetrolStationsGet()
-      .subscribe((petrolStations) => {
-        this.stationContainerService.petrolStations = petrolStations;
-          this.collectionSize = petrolStations.length;
-    });
-
-
-  }
-
-  search(text: string, pipe: PipeTransform): PetrolStationWithStatusesViewDto[] {
-    return this.stationContainerService.petrolStations.filter(ps => {
-      const term = text.toLowerCase();
-
-      return ps.city!.toLowerCase().includes(term)
-          || ps.street!.toLowerCase().includes(term)
-          ;
-    });
-  }*/
