@@ -2,64 +2,36 @@
 
 <form>
   <div class="mb-3 row">
-    <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
+    <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Keresés:</label>
     <div class="col-xs-3 col-sm-auto">
-      <input id="table-filtering-search" class="form-control" type="text" [formControl]="filter">
+      <input id="table-filtering-search" class="form-control" type="text" [formControl]="filter$">
     </div>
   </div>
 </form>
 
-<table class="table table-bordered">
-  <thead class="thead-dark">
-    <tr>
-    <td>Város</td>
-    <td>Utca</td>
-    <td>95</td>
-    <td>Diesel</td>
-    <td>Módosítás</td>
-  </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let station of stations$ | async | slice: (page-1) * pageSize : page * pageSize" >
-    <td>{{station.city}}</td>
-    <td>{{station.street}}</td>
-    <td>nincs</td>
-    <td>van</td>
-    <td><a [routerLink]="['/stations', station.id]">Módosít</a></td>
-  </tr>
-  </tbody>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="city">" matSortDirection="asc">
+
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Város </th>
+    <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+  </ng-container>
+  <ng-container matColumnDef="street">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Utca </th>
+    <td mat-cell *matCellDef="let element"> {{element.street}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="modify">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Módosítás </th>
+    <td mat-cell *matCellDef="let element"><a [routerLink]="['/stations', element.id]">Módosít</a></td>
+  </ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedColums"></tr>
+<tr mat-row *matRowDef="let element; columns: displayedColums;"></tr>
 </table>
 
-<br/>
-<ngb-pagination
-  [(page)]="page"
-  [pageSize]="pageSize"
-  [collectionSize]="collectionSize">
-</ngb-pagination>
-
-
-
-<p>A benzinkutak listájáért köszönet a <a href="https://holtankoljak.hu">holtankoljak.hu</a>-nak</p>
-
-
-<!--h2>My Stations</h2>
-<ul class="stations">
-  <li *ngFor="let station of stations">
-    <button type="button" [routerLink]="['/stations', station.id]">
-      <span class="badge">{{station.id}}</span>
-      <span class="address">{{station.address}}</span>
-      <span class="filler"></span>
-      <span class="state">{{station.state}}</span>
-    </button>
-  </li>
-</ul-->
-
-<!-- h2>{{station.address | uppercase }} Details</h2>
-<div><span>id: </span>{{station.id}}</div>
-<div><span>address: </span>{{station.address}}</div>
-<div><span>state: </span>{{station.state}}</div>
-
-<div>
-    <label for="name">Station address: </label>
-    <input id="name" [(ngModel)]="station.address" placeholder="address">
-</div -->
+<mat-paginator [length]="length"
+              [pageSize]="pageSize"
+              [pageIndex]="pageIndex"
+              [pageSizeOptions]="pageSizeOptions"
+    (page)="getServerData($event)">
+</mat-paginator>

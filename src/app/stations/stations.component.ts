@@ -1,59 +1,87 @@
-import { Component, OnInit, PipeTransform } from '@angular/core';
-import { STATIONS } from '../mock-stations';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PetrolStationService } from 'src/OpenApi/services';
-import { FormControl } from '@angular/forms';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-
-import { DecimalPipe } from '@angular/common';
-
-import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
-import { StationContainerService } from '../station-container.service';
+import { MatSort } from '@angular/material/sort';
+import {  PageEvent } from '@angular/material/paginator';
+
 
 @Component({
   selector: 'app-stations',
   templateUrl: './stations.component.html',
   styleUrls: ['./stations.component.css'],
-  providers: [DecimalPipe]
 })
-export class StationsComponent implements OnInit {
+export class StationsComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatSort) sort!: MatSort;
 
-  stations = STATIONS; //fixme delete this line?
-  //petrolStations: PetrolStationWithStatusesViewDto[] = [];
+  dataSource = new MatTableDataSource<PetrolStationWithStatusesViewDto>([]);
+  displayedColums = ['city',"street","modify"];
 
-  page = 1;
-  pageSize = 25;
-  collectionSize = 0;
+  filterForm?: FormGroup;
 
-  stations$: Observable<PetrolStationWithStatusesViewDto[]>;
-  filter = new FormControl('', {nonNullable: true});
+  length = 100;
+  pageIndex = 0;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
 
+  filter: string;
+  filter$ = new FormControl('', {nonNullable: true});
 
-  constructor(private petrolStationService: PetrolStationService, pipe: DecimalPipe, private stationContainerService: StationContainerService )
-  {
-    this.stations$ = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => this.search(text, pipe))
-    );
-   }
+  public doFilter = (event: Event ) => {
 
-  ngOnInit(): void {
-    this.petrolStationService
-      .apiPetrolStationGetPetrolStationsGet()
-      .subscribe((petrolStations) => {
-        this.stationContainerService.petrolStations = petrolStations;
-          this.collectionSize = petrolStations.length;
-    });
+    this.dataSource.filter = (event.target as HTMLInputElement).value.trim().toLocaleLowerCase();
   }
 
-  search(text: string, pipe: PipeTransform): PetrolStationWithStatusesViewDto[] {
-    return this.stationContainerService.petrolStations.filter(ps => {
-      const term = text.toLowerCase();
+  constructor(
+    private fb: FormBuilder,
+    private petrolStationService: PetrolStationService
+  ) {
 
-      return ps.city!.toLowerCase().includes(term)
-          || ps.street!.toLowerCase().includes(term)
-          ;
-    });
+    this.filterForm = this.fb.group({
+    city: [],
+    street: []
+  });
+}
+
+  ngOnInit(): void {
+    this.refreshPetrolStations();
+  }
+
+  ngAfterViewInit() {
+    this.sort.disableClear = true;
+    this.dataSource.sort = this.sort;
+
+    this.filter$.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged()).subscribe(filter => {
+        this.filter = filter,
+        this.refreshPetrolStations()
+      });
+  }
+
+  refreshPetrolStations() {
+    this.petrolStationService
+      .apiPetrolStationGetPetrolStationsGet({
+        filter: this.filter,
+        count: this.pageSize,
+        page: this.pageIndex,
+      })
+      .subscribe((petrolStations) => {
+        (this.dataSource.data = petrolStations.petrolStations!),
+          (this.length = petrolStations.totalCount!);
+      });
+  }
+
+  resetFilters() {
+    this.filterForm?.reset();
+  }
+
+  public getServerData(event?: PageEvent) {
+    this.pageIndex = event?.pageIndex!;
+    this.pageSize = event?.pageSize!;
+    this.refreshPetrolStations();
   }
 }
