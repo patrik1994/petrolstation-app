@@ -36,7 +36,7 @@ export class ModifyStationComponent implements OnInit {
 
   fillStatusList() {
     //console.log("init statuses" + this.station?.statuses);
-    this.statusList = this.station?.statuses!;
+    this.statusList = this.station?.statuses!; //add fitler created in last 36 hours TODO
 
     this.statusList?.forEach((element) => {
       //console.log("element: " + element.fuelType + " isthere: " + element.isThereFuel);
@@ -44,14 +44,17 @@ export class ModifyStationComponent implements OnInit {
         if (this.fuelList[element.fuelType] === undefined) this.fuelList[element.fuelType] = 0;
         this.fuelList[element.fuelType] += element.isThereFuel ? 1 : -1;
       }
+      //fixme store number of votes, get average
     });
 
     this.fuelList.forEach((value, index) => {
-    //  console.log(index + " - " + value);
+      console.log(index + " - " + value);
       if (value > 0) {
         this.fuelListResult[index] = "van";
-      } else {
+      } else if (value < 0){
         this.fuelListResult[index] = "nincs";
+      } else {
+        this.fuelListResult[index] = "nincs adat";
       }
 
     });
