@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PetrolStationWithStatusesViewDto } from 'src/OpenApi/models/petrol-station-with-statuses-view-dto';
-import { PetrolStationViewDto, StatusCreateDto, StatusDto } from 'src/OpenApi/models';
+import { StatusCreateDto, StatusDto } from 'src/OpenApi/models';
 import { PetrolStationService, StatusService } from 'src/OpenApi/services';
-import { StationContainerService } from '../station-container.service';
 
 @Component({
   selector: 'app-modify-station',
@@ -20,32 +19,25 @@ export class ModifyStationComponent implements OnInit {
   fuelList: number[] = [];
   fuelListResult: string[] = [];
 
-  constructor( private route: ActivatedRoute, private stationContainerService: StationContainerService, private petrolStationService: PetrolStationService, private statusService: StatusService ) { }
+  constructor( private route: ActivatedRoute, private petrolStationService: PetrolStationService, private statusService: StatusService ) { }
 
   ngOnInit(): void {
     const routeParams = this.route.snapshot.paramMap;
     this.stationIdFromRoute = Number(routeParams.get('stationId'));
 
-    if(this.stationContainerService.petrolStations.length == 0){
-      this.petrolStationService
-      .apiPetrolStationGetPetrolStationsGet()
-      .subscribe((petrolStations) => {
-        this.stationContainerService.petrolStations = petrolStations;
-        this.station = this.stationContainerService.petrolStations.find(s => s.id === this.stationIdFromRoute );
-
-        this.fillStatusList();
-     });
-    }
-    else {
-      this.station = this.stationContainerService.petrolStations.find(s => s.id === this.stationIdFromRoute );
-      this.fillStatusList();
-    }
+    this.petrolStationService
+      .apiPetrolStationPetrolStationIdGet({petrolStationId: this.stationIdFromRoute})
+      .subscribe( petrolStation => {
+          this.station = petrolStation,
+          this.fillStatusList();
+        }
+      );
   }
 
   fillStatusList() {
-   // console.log("init statuses" + this.station?.statuses); 
+    //console.log("init statuses" + this.station?.statuses);
     this.statusList = this.station?.statuses!;
-      
+
     this.statusList?.forEach((element) => {
       //console.log("element: " + element.fuelType + " isthere: " + element.isThereFuel);
       if (element.fuelType !== undefined) {
@@ -61,7 +53,7 @@ export class ModifyStationComponent implements OnInit {
       } else {
         this.fuelListResult[index] = "nincs";
       }
-      
+
     });
   }
 
@@ -105,9 +97,9 @@ function getFuelTypeId(_input: any) {
     case "98-as benzin":
       return 1;
     case "100-as benzin":
-      return 2;  
+      return 2;
     case "95-ös prémium benzin":
-      return 3;  
+      return 3;
     case "Diesel":
       return 4;
     case "Prémium diesel":
