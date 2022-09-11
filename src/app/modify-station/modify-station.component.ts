@@ -18,6 +18,7 @@ export class ModifyStationComponent implements OnInit {
   statusList: StatusDto[] = [];
   fuelList: number[] = [];
   fuelListResult: string[] = [];
+  counter: number[] = [];
 
   constructor( private route: ActivatedRoute, private petrolStationService: PetrolStationService, private statusService: StatusService ) { }
 
@@ -36,22 +37,47 @@ export class ModifyStationComponent implements OnInit {
 
   fillStatusList() {
     //console.log("init statuses" + this.station?.statuses);
-    this.statusList = this.station?.statuses!; //add fitler created in last 36 hours TODO
+    this.statusList = this.station?.statuses!;
+    this.statusList.filter((element) => {
+      /*
+        console.log(element.createdAt);
+    
+        var date = new  Date (element.createdAt.substring(0, 19));
 
+
+        var dateNow = new Date();
+        var difference = dateNow.getTime() - date.getTime();
+
+        console.log(date.toDateString());
+        console.log("diff: " + difference);
+        */
+    });
+
+    
+   
     this.statusList?.forEach((element) => {
       //console.log("element: " + element.fuelType + " isthere: " + element.isThereFuel);
       if (element.fuelType !== undefined) {
-        if (this.fuelList[element.fuelType] === undefined) this.fuelList[element.fuelType] = 0;
+        if (this.fuelList[element.fuelType] === undefined) {
+          this.fuelList[element.fuelType] = 0;
+          this.counter[element.fuelType] = 1;
+        } else {
+          this.counter[element.fuelType] += 1;
+        }
         this.fuelList[element.fuelType] += element.isThereFuel ? 1 : -1;
       }
-      //fixme store number of votes, get average
     });
 
     this.fuelList.forEach((value, index) => {
+    //  console.log(index + " - " + value);
+      if (value != null && value != 0) {
+        value = value / this.counter[index];
+      }
+      
       console.log(index + " - " + value);
-      if (value > 0) {
+      if (value > 0.33) {
         this.fuelListResult[index] = "van";
-      } else if (value < 0){
+      } else if (value < -0.33) {
         this.fuelListResult[index] = "nincs";
       } else {
         this.fuelListResult[index] = "nincs adat";
